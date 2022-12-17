@@ -1,43 +1,34 @@
 
-module blink(counter,
-             reset,
-             clk,
-             col,
-             row,
-             pauze,
-             enable_col,
-             enable_row,
-             enable_pauze,
-             enable_colpauze,
-             led,
-             enable_preamble,
-             preamble
-            );
+module blink(
+    clk,
+    col,
+    row,
+    led,
+    );
 
-  output reg [12:0] counter;
-  input reset;
-  input clk;
-  output reg [3:0]preamble;
-  output reg [3:0]col;
-  output reg [3:0]row;
-  output reg [3:0]pauze;
-  output enable_preamble;
-  output enable_col;
-  output enable_row;
-  output enable_pauze;
-  output enable_colpauze;
-  output led;
+    /* Inputs */
+    input clk;
+    input reg [3:0]col;
+    input reg [3:0]row;
 
+    /* Outputs */
+    output led;
+
+    /* Parameters */
+
+    /* State variables */
+    reg [10:0] counter = 11'd0;
+    reg [3:0] preamble = 4'd1;
+    reg [3:0] pauze = 4'd3;
+
+    reg enable_preamble;
+    reg enable_col;
+    reg enable_row;
+    reg enable_pauze;
+    reg enable_colpauze;
+  
 always@(posedge clk) 
   begin
-    if (reset) begin
-    	counter <= 0;
-    	preamble <= 1;
-      	col <= 7;
-        row <= 5;
-    	pauze <= 3; 
-    end
-    else
     	counter <= counter +1;
   end
   

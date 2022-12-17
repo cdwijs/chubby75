@@ -3,8 +3,6 @@ TOP=uart_tx
 
 OBJS+=top.v
 
-TRELLIS=/usr/local/share/trellis
-
 all: ${TARGET}.bit
 
 $(TARGET).json: $(OBJS)

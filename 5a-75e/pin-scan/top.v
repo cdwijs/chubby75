@@ -1,4 +1,5 @@
 `include "uart_tx.v"
+`include "blink.v"
 
 /* baudrate: 9600 */
 /* Top level module for keypad + UART demo */
@@ -7,7 +8,8 @@ module top (
     clk_i, 
     // UART lines
     TX,
-    MYLED,
+    BALL_T6, //LED
+    BALL_N5,
     );
 
     parameter clk_freq = 25000000;
@@ -18,7 +20,10 @@ module top (
 
     /* FTDI I/O */
     output TX;
-    output MYLED;
+    output BALL_T6; //LED
+
+    /* BLINK I/O */
+    output BALL_N5;
 
     /* 9600 Hz clock generation (from 25 MHz) */
     reg clk_9600 = 0;
@@ -60,9 +65,25 @@ module top (
         .tx (TX),
     );
 
+    blink myblink (
+        counter (),
+        reset ()
+        clk,
+        col,
+        row,
+        pauze,
+        enable_col,
+        enable_row,
+        enable_pauze,
+        enable_colpauze,
+        led,
+        enable_preamble,
+        preamble
+    );
+
     /* Wiring */
     assign LED=ledval;
-    assign MYLED=ledval;
+    assign BALL_T6=ledval;
     
     /* Low speed clock generation */
     always @ (posedge clk_i) begin
