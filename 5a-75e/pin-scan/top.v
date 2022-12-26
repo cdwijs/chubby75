@@ -16,7 +16,14 @@ module top (
     output BALL_N4,
     //output BALL_M3, //not on LED headers
     output BALL_N1,
-    //output BALL_M4,
+    //output BALL_M4, //output enable, seems to be low-active
+
+    output BALL_C4,
+    output BALL_D4,
+    //output BALL_E4, //not on LED headers
+    output BALL_D3,
+    output BALL_E3, 
+    //output BALL_F4, //not on LED headers
     );
 
     parameter clk_freq = 25000000;
@@ -85,21 +92,25 @@ module top (
     parameter T = 7'd20;
     parameter Q = 7'd21;
 
+    blink blinkT6 (clk_1,T,6,BALL_T6); //LED (low-active)
 
-
-    //blink blink1405 (clk_1,14,5,BALL_N5);
-    blink blinkT6 (clk_1,T,6,BALL_T6);
-
-    blink blinkN5 (clk_1,N,5,BALL_N5);
-    blink blinkN3 (clk_1,N,3,BALL_N3);
+    blink blinkN5 (clk_1,N,5,BALL_N5); //global pin 10
+    blink blinkN3 (clk_1,N,3,BALL_N3); //global pin 9
     //blink blinkP3 (clk_1,P,3,BALL_P3); //not on LED headers
-    blink blinkP4 (clk_1,P,4,BALL_P4);
-    blink blinkN4 (clk_1,N,4,BALL_N4);
+    blink blinkP4 (clk_1,P,4,BALL_P4); //global pin 11
+    blink blinkN4 (clk_1,N,4,BALL_N4); //global pin 7
     //blink blinkM3 (clk_1,M,3,BALL_M3); //not on LED headers
-    blink blinkN1 (clk_1,N,1,BALL_N1);
-    //blink blinkM4 (clk_1,M,4,BALL_M4); //has a weird effect on the other LEDs
+    blink blinkN1 (clk_1,N,1,BALL_N1);  //global pin 13
+    //blink blinkM4 (clk_1,M,4,BALL_M4); //output enable, seems to be low-active
 
-    
+    blink blinkC4 (clk_1,C,4,BALL_C4); //J1 pin 2
+    blink blinkD4 (clk_1,D,4,BALL_D4); //J1 pin 1
+    //blink blinkE4 (clk_1,E,4,BALL_E4); //not on LED headers
+    blink blinkD3 (clk_1,D,3,BALL_D3); //J1 pin 6 
+    blink blinkE3 (clk_1,E,3,BALL_E3); //J1 pin 5
+    //blink blinkF4 (clk_1,F,4,BALL_F4); //not on LED headers
+
+
     /* Wiring */
     assign LED=ledval;
     //assign BALL_T6=ledval;
