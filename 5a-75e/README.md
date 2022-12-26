@@ -2,10 +2,11 @@
 
 The Colorlight 5A-75E is an updated version of 5A-75B with 16 HUB75 ports. It also uses a Lattice ECP5-25 FPGA.
 
-There are 2 known versions available on the market at this time:
+There are 3 known versions available on the market at this time:
 
 * V6.0: LFE5U-25F with CABGA256 package. [Detailed info](hardware_V6.0.md).
 * V7.1: LFE5U-25F with CABGA256 package. [Detailed info](hardware_V7.1.md).
+* V8.0: LFE5U-25F with CABGA256 package. [Detailed info](hardware_V8.0.md).
 
 The V6.0 board has the following components in addition to the FPGA:
 
@@ -17,7 +18,12 @@ The V7.1 board has the following components in addition to the FPGA:
 * 2 1M x 16bit SDRAMs (ESMT M12L16161A-5T 200MHz)
 * 2 1Gb Ethernet PHYs (Broadcom B50612D, just like the RV901T)
 
-In addition, both boards have:
+The V8.0 board has the following components in addition to the FPGA:
+
+* 
+* 
+
+In addition, all boards have:
 
 * 1 25Q32JV 32Mbit SPI flash for FPGA configuration
 * Tons of level shifters to translate from 3.3V to 5V signaling

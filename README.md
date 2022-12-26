@@ -5,6 +5,7 @@ This repository contains reverse engineering information about the following boa
 
 * Linsn RV901T HUB75 LED driver card (which uses a Spartan 6 LX16 FPGA)
 * ColorLight 5A-75B V6.1 and V7.0 (which use a Lattice ECP5-25 FPGA)
+* ColorLight 5A-75E V6.0, V7.1 and V8.0 (which use a Lattice ECP5-25 FPGA)
 
 These are known as a "Receiver Card". Its stock function is to receive and forward framebuffer 
 data using a proprietary protocol (from a "Sender Card") and blit out control signals to LED panels 
@@ -47,7 +48,7 @@ As it contains a user-reprogrammable Spartan 6 FPGA (LX16, 14k 'logic cells', 91
 potential to be usable as a general purpose FPGA development board, an interface card for various purposes, 
 or a logic analyzer.
 
-RV908 - No Supported
+RV908 - Not Supported
 --------------------
 
 There are RV908 boards which are an RV901T with the HUB75 daughter board integrated.
