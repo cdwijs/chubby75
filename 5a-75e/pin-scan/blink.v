@@ -6,7 +6,7 @@ module blink(
   output led
 );
   reg [10:0] counter = 11'd0;
-  reg [6:0] preamble = 7'd1;
+  reg [6:0] preamble = 7'd2;
   reg [6:0] pauze = 7'd2;
 
     reg enable_preamble;

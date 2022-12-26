@@ -5,25 +5,22 @@
 /* Top level module for keypad + UART demo */
 module top (
     // input hardware clock (25 MHz)
-    clk_i, 
+    input clk_i, 
     // UART lines
-    TX,
-    BALL_T6, //LED
-    BALL_N5,
+    output TX,
+    output BALL_T6, //LED
+    output BALL_N5,
+    output BALL_N3,
+    //output BALL_P3, //not on LED headers
+    output BALL_P4,
+    //output BALL_N4,
+    //output BALL_M3,
+    //output BALL_N1,
+    //output BALL_M4,
     );
 
     parameter clk_freq = 25000000;
     parameter baudrate = 75;
-
-    /* Clock input */
-    input clk_i;
-
-    /* FTDI I/O */
-    output TX;
-    output BALL_T6; //LED
-
-    /* BLINK I/O */
-    output BALL_N5;
 
     /* 9600 Hz clock generation (from 25 MHz) */
     reg clk_9600 = 0;
@@ -65,11 +62,47 @@ module top (
         .tx (TX),
     );
 
-    blink blink1405 (clk_1,14,5,BALL_N5);
+
+    parameter A = 7'd01;
+    parameter B = 7'd02;
+    parameter C = 7'd03;
+    parameter D = 7'd04;
+    parameter E = 7'd05;
+    parameter F = 7'd06;
+    parameter G = 7'd07;
+    parameter H = 7'd08;
+    parameter I = 7'd09;
+    parameter J = 7'd10;
+    parameter K = 7'd11;
+    parameter L = 7'd12;
+    parameter M = 7'd13;
+    parameter N = 7'd14;
+    parameter O = 7'd15;
+    parameter P = 7'd16;
+    parameter Q = 7'd17;
+    parameter R = 7'd18;
+    parameter S = 7'd19;
+    parameter T = 7'd20;
+    parameter Q = 7'd21;
+
+
+
+    //blink blink1405 (clk_1,14,5,BALL_N5);
+    blink blinkT6 (clk_1,T,6,BALL_T6);
+
+    blink blinkN5 (clk_1,N,5,BALL_N5);
+    blink blinkN3 (clk_1,N,3,BALL_N3);
+    //blink blinkP3 (clk_1,P,3,BALL_P3); //not on LED headers
+    blink blinkP4 (clk_1,P,4,BALL_P4);
+    //blink blinkN4 (clk_1,N,4,BALL_N4);
+    //blink blinkM3 (clk_1,M,3,BALL_M3);
+    //blink blinkN1 (clk_1,N,1,BALL_N1);
+    //blink blinkM4 (clk_1,M,4,BALL_M4);
+
     
     /* Wiring */
     assign LED=ledval;
-    assign BALL_T6=ledval;
+    //assign BALL_T6=ledval;
     
     /* Low speed clock generation */
     always @ (posedge clk_i) begin
