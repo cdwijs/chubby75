@@ -13,9 +13,9 @@ module top (
     output BALL_N3,
     //output BALL_P3, //not on LED headers
     output BALL_P4,
-    //output BALL_N4,
-    //output BALL_M3,
-    //output BALL_N1,
+    output BALL_N4,
+    //output BALL_M3, //not on LED headers
+    output BALL_N1,
     //output BALL_M4,
     );
 
@@ -94,10 +94,10 @@ module top (
     blink blinkN3 (clk_1,N,3,BALL_N3);
     //blink blinkP3 (clk_1,P,3,BALL_P3); //not on LED headers
     blink blinkP4 (clk_1,P,4,BALL_P4);
-    //blink blinkN4 (clk_1,N,4,BALL_N4);
-    //blink blinkM3 (clk_1,M,3,BALL_M3);
-    //blink blinkN1 (clk_1,N,1,BALL_N1);
-    //blink blinkM4 (clk_1,M,4,BALL_M4);
+    blink blinkN4 (clk_1,N,4,BALL_N4);
+    //blink blinkM3 (clk_1,M,3,BALL_M3); //not on LED headers
+    blink blinkN1 (clk_1,N,1,BALL_N1);
+    //blink blinkM4 (clk_1,M,4,BALL_M4); //has a weird effect on the other LEDs
 
     
     /* Wiring */
