@@ -5,9 +5,6 @@ FREQUENCY   PORT "clk_i"    25 MHZ;
 LOCATE      COMP "MYLED"       SITE "T6";
 IOBUF       PORT "MYLED"       IO_TYPE=LVCMOS33;
 
-LOCATE      COMP "TX"       SITE "G3";
-IOBUF       PORT "TX"       IO_TYPE=LVCMOS33;
-
 LOCATE      COMP "RX"       SITE "M13";
 IOBUF       PORT "RX"       IO_TYPE=LVCMOS33;
 
