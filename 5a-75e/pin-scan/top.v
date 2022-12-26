@@ -7,7 +7,6 @@ module top (
     // input hardware clock (25 MHz)
     input clk_i, 
     // UART lines
-    output TX,
     output BALL_T6, //LED
     output BALL_N5,
     output BALL_N3,
@@ -24,6 +23,13 @@ module top (
     output BALL_D3,
     output BALL_E3, 
     //output BALL_F4, //not on LED headers
+
+    output BALL_F3,
+    output BALL_F5,
+    //output BALL_G3, //not on LED headers
+    output BALL_G4,
+    output BALL_H3,
+    //output BALL_H4,
     );
 
     parameter clk_freq = 25000000;
@@ -52,23 +58,6 @@ module top (
 
     /* LED register */
     reg ledval = 0;
-
-    /* UART transmitter module designed for
-       8 bits, no parity, 1 stop bit. 
-    */
-    uart_tx_8n1 transmitter (
-        // 9600 baud rate clock
-        .clk (clk_9600),
-        // byte to be transmitted
-        .txbyte (uart_txbyte),
-        // trigger a UART transmit on baud clock
-        .senddata (uart_send),
-        // input: tx is finished
-        .txdone (uart_txed),
-        // output UART tx pin
-        .tx (TX),
-    );
-
 
     parameter A = 7'd01;
     parameter B = 7'd02;
@@ -109,6 +98,13 @@ module top (
     blink blinkD3 (clk_1,D,3,BALL_D3); //J1 pin 6 
     blink blinkE3 (clk_1,E,3,BALL_E3); //J1 pin 5
     //blink blinkF4 (clk_1,F,4,BALL_F4); //not on LED headers
+
+    blink blinkF3 (clk_1,F,3,BALL_F3); //J2 pin 2
+    blink blinkF5 (clk_1,F,5,BALL_F5); //J2 pin 1
+    //blink blinkG3 (clk_1,G,3,BALL_G3); //not on LED headers
+    blink blinkG4 (clk_1,G,4,BALL_G4); //J2 pin 6
+    blink blinkH3 (clk_1,H,3,BALL_H3); //J2 pin 5
+    //blink blinkH4 (clk_1,H,4,BALL_H4);
 
 
     /* Wiring */
