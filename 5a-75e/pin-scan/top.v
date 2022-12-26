@@ -34,7 +34,7 @@ module top (
     /* 1 Hz clock generation (from 25 MHz) */
     reg clk_1 = 0;
     reg [31:0] cntr_1 = 32'b0;
-    parameter period_1 = 2500000;
+    parameter period_1 = 250000;
 
     // Note: could also use "0" or "9" below, but I wanted to
     // be clear about what the actual binary value is.
@@ -65,22 +65,8 @@ module top (
         .tx (TX),
     );
 
-    blink myblink (
-        counter (),
-        reset ()
-        clk,
-        col,
-        row,
-        pauze,
-        enable_col,
-        enable_row,
-        enable_pauze,
-        enable_colpauze,
-        led,
-        enable_preamble,
-        preamble
-    );
-
+    blink blink1405 (clk_1,14,5,BALL_N5);
+    
     /* Wiring */
     assign LED=ledval;
     assign BALL_T6=ledval;

@@ -1,5 +1,5 @@
 TARGET=uart_tx
-TOP=uart_tx
+TOP=top.v
 
 OBJS+=top.v
 
