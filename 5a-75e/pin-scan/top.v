@@ -7,6 +7,22 @@ module top (
     // input hardware clock (25 MHz)
     input clk_i, 
     // UART lines
+
+    //output BALL_A2, //not on LED headers
+    //output BALL_A3, //not on LED headers
+    //output BALL_A4, //not on LED headers
+    //output BALL_A5, //not on LED headers
+    //output BALL_A6, //not on LED headers
+    //output BALL_A7, //not on LED headers
+    //output BALL_A8, //not on LED headers
+    //output BALL_A9, //not on LED headers
+    //output BALL_A10, //not on LED headers
+    //output BALL_A11, //not on LED headers
+    //output BALL_A12, //not on LED headers
+    //output BALL_A13, //not on LED headers
+    //output BALL_A14, //not on LED headers
+    //output BALL_A15, //not on LED headers
+
     output BALL_T6, //LED
     output BALL_N5,
     output BALL_N3,
@@ -15,7 +31,7 @@ module top (
     output BALL_N4,
     //output BALL_M3, //not on LED headers
     output BALL_N1,
-    //output BALL_M4, //output enable, seems to be low-active
+    output BALL_M4, //output enable, seems to be low-active
 
     output BALL_C4,
     output BALL_D4,
@@ -81,6 +97,23 @@ module top (
     parameter T = 7'd20;
     parameter Q = 7'd21;
 
+    //blink blinkA2 (clk_1,A,2,BALL_A2); //not on LED headers
+    //blink blinkA3 (clk_1,A,3,BALL_A3); //not on LED headers
+    //blink blinkA4 (clk_1,A,4,BALL_A4); //not on LED headers
+    //blink blinkA5 (clk_1,A,5,BALL_A5); //not on LED headers
+    //blink blinkA6 (clk_1,A,6,BALL_A6); //not on LED headers
+    //blink blinkA7 (clk_1,A,7,BALL_A7); //not on LED headers
+    //blink blinkA8 (clk_1,A,8,BALL_A8); //not on LED headers
+    //blink blinkA9 (clk_1,A,9,BALL_A9); //not on LED headers
+    //blink blinkA10 (clk_1,A,10,BALL_A10); //not on LED headers
+    //blink blinkA11 (clk_1,A,11,BALL_A11); //not on LED headers
+    //blink blinkA12 (clk_1,A,12,BALL_A12); //not on LED headers
+    //blink blinkA13 (clk_1,A,13,BALL_A13); //not on LED headers
+    //blink blinkA14 (clk_1,A,14,BALL_A14); //not on LED headers
+    //blink blinkA15 (clk_1,A,15,BALL_A15); //not on LED headers
+
+
+
     blink blinkT6 (clk_1,T,6,BALL_T6); //LED (low-active)
 
     blink blinkN5 (clk_1,N,5,BALL_N5); //global pin 10
@@ -90,7 +123,7 @@ module top (
     blink blinkN4 (clk_1,N,4,BALL_N4); //global pin 7
     //blink blinkM3 (clk_1,M,3,BALL_M3); //not on LED headers
     blink blinkN1 (clk_1,N,1,BALL_N1);  //global pin 13
-    //blink blinkM4 (clk_1,M,4,BALL_M4); //output enable, seems to be low-active
+    assign BALL_M4 = 1'b0; //blink blinkM4 (clk_1,M,4,BALL_M4); //output enable, seems to be low-active
 
     blink blinkC4 (clk_1,C,4,BALL_C4); //J1 pin 2
     blink blinkD4 (clk_1,D,4,BALL_D4); //J1 pin 1
