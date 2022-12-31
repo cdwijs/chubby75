@@ -156,7 +156,7 @@ module top (
     output BALL_M1, //not on LED headers
     output BALL_M2, //not on LED headers
     output BALL_M3, //not on LED headers
-    output BALL_M4, //not on LED headers
+    output BALL_M4, //output enable, low-active
     output BALL_M5, //not on LED headers
     output BALL_M6, //not on LED headers
     output BALL_M7, //not on LED headers
@@ -178,7 +178,6 @@ module top (
     output BALL_N4,
     //output BALL_M3, //not on LED headers
     output BALL_N1,*/
-    output BALL_M4, //output enable, low-active
 /*
     output BALL_C4,
     output BALL_D4,
@@ -392,7 +391,7 @@ module top (
     blink blinkM1 (clk_1,M,1,BALL_M1); 
     blink blinkM2 (clk_1,M,2,BALL_M2); //not on LED headers
     blink blinkM3 (clk_1,M,3,BALL_M3); 
-    //blink blinkM4 (clk_1,M,4,BALL_M4); //enable, active low not on LED headers
+    assign BALL_M4 = 1'b0; //blink blinkM4 (clk_1,M,4,BALL_M4); //output enable, low-active
     blink blinkM5 (clk_1,M,5,BALL_M5); //not on LED headers
     blink blinkM6 (clk_1,M,6,BALL_M6); //not on LED headers
     blink blinkM7 (clk_1,M,7,BALL_M7); //not on LED headers
