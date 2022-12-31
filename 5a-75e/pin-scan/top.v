@@ -7,7 +7,7 @@ module top (
     // input hardware clock (25 MHz)
     input clk_i, 
     // UART lines
-
+/*
     //output BALL_A2, //not on LED headers
     //output BALL_A3, //not on LED headers
     //output BALL_A4, //not on LED headers
@@ -22,7 +22,57 @@ module top (
     //output BALL_A13, //not on LED headers
     //output BALL_A14, //not on LED headers
     //output BALL_A15, //not on LED headers
+*/ /*
+    output BALL_B1, 
+    //output BALL_B2, //not on LED headers
+    //output BALL_B3, //not on LED headers
+    //output BALL_B4, //not on LED headers
+    //output BALL_B5, //not on LED headers
+    //output BALL_B6, //not on LED headers
+    //output BALL_B7, //not on LED headers
+    //output BALL_B8, //not on LED headers
+    //output BALL_B9, //not on LED headers
+    //output BALL_B10, //not on LED headers
+    //output BALL_B11, //not on LED headers
+    //output BALL_B12, //not on LED headers
+    //output BALL_B13, //not on LED headers
+    //output BALL_B14, //not on LED headers
+    output BALL_B15, 
+    //output BALL_B16, //not on LED headers
+*/ /*
+    output BALL_C1, 
+    output BALL_C2, //not on LED headers
+    output BALL_C3, //not on LED headers
+    output BALL_C4, 
+    output BALL_C5, //not on LED headers
+    output BALL_C6, //not on LED headers
+    output BALL_C7, //not on LED headers
+    output BALL_C8, //not on LED headers
+    output BALL_C9, //not on LED headers
+    output BALL_C10, //not on LED headers
+    output BALL_C11, //not on LED headers
+    output BALL_C12, //not on LED headers
+    output BALL_C13, //not on LED headers
+    output BALL_C14,
+    output BALL_C15,
+    output BALL_C16,
+*/
+    output BALL_D1, 
+    output BALL_D3, 
+    output BALL_D4, 
+    //output BALL_D5, //not on LED headers
+    //output BALL_D6, //not on LED headers
+    //output BALL_D7, //not on LED headers
+    //output BALL_D8, //not on LED headers
+    //output BALL_D9, //not on LED headers
+    //output BALL_D10, //not on LED headers
+    //output BALL_D11, //not on LED headers
+    //output BALL_D12, //not on LED headers
+    //output BALL_D13, //not on LED headers
+    //output BALL_D14, //not on LED headers
+    //output BALL_D16, //not on LED headers
 
+/*
     output BALL_T6, //LED
     output BALL_N5,
     output BALL_N3,
@@ -30,9 +80,9 @@ module top (
     output BALL_P4,
     output BALL_N4,
     //output BALL_M3, //not on LED headers
-    output BALL_N1,
-    output BALL_M4, //output enable, seems to be low-active
-
+    output BALL_N1,*/
+    output BALL_M4, //output enable, low-active
+/*
     output BALL_C4,
     output BALL_D4,
     //output BALL_E4, //not on LED headers
@@ -45,7 +95,7 @@ module top (
     //output BALL_G3, //not on LED headers
     output BALL_G4,
     output BALL_H3,
-    //output BALL_H4,
+    //output BALL_H4,*/
     );
 
     parameter clk_freq = 25000000;
@@ -111,9 +161,56 @@ module top (
     //blink blinkA13 (clk_1,A,13,BALL_A13); //not on LED headers
     //blink blinkA14 (clk_1,A,14,BALL_A14); //not on LED headers
     //blink blinkA15 (clk_1,A,15,BALL_A15); //not on LED headers
-
-
-
+/*
+    blink blinkB1 (clk_1,B,1,BALL_B1); //J4 pin 5
+    //blink blinkB2 (clk_1,B,2,BALL_B2); //not on LED headers
+    //blink blinkB3 (clk_1,B,3,BALL_B3); //not on LED headers
+    //blink blinkB4 (clk_1,B,4,BALL_B4); //not on LED headers
+    //blink blinkB5 (clk_1,B,5,BALL_B5); //not on LED headers
+    //blink blinkB6 (clk_1,B,6,BALL_B6); //not on LED headers
+    //blink blinkB7 (clk_1,B,7,BALL_B7); //not on LED headers
+    //blink blinkB8 (clk_1,B,8,BALL_B8); //not on LED headers
+    //blink blinkB9 (clk_1,B,9,BALL_B9); //not on LED headers
+    //blink blinkB10 (clk_1,B,10,BALL_B10); //not on LED headers
+    //blink blinkB11 (clk_1,B,11,BALL_B11); //not on LED headers
+    //blink blinkB12 (clk_1,B,12,BALL_B12); //not on LED headers
+    //blink blinkB13 (clk_1,B,13,BALL_B13); //not on LED headers
+    //blink blinkB14 (clk_1,B,14,BALL_B14); //not on LED headers
+    blink blinkB15 (clk_1,B,15,BALL_B15); //J11 pin 2
+    //blink blinkA16 (clk_1,B,16,BALL_A16); //not on LED headers
+*/ /*
+    blink blinkC1 (clk_1,C,1,BALL_C1); //J4 pin 2
+    //blink blinkC2 (clk_1,C,2,BALL_C2); //not on LED headers
+    //blink blinkC3 (clk_1,C,3,BALL_C3); //not on LED headers
+    blink blinkC4 (clk_1,C,4,BALL_C4); //J1 pin 2
+    //blink blinkC5 (clk_1,C,5,BALL_C5); //not on LED headers
+    //blink blinkC6 (clk_1,C,6,BALL_C6); //not on LED headers
+    //blink blinkC7 (clk_1,C,7,BALL_C7); //not on LED headers
+    //blink blinkC8 (clk_1,C,8,BALL_C8); //not on LED headers
+    //blink blinkC9 (clk_1,C,9,BALL_C9); //not on LED headers
+    //blink blinkC10 (clk_1,C,10,BALL_C10); //not on LED headers
+    //blink blinkC11 (clk_1,C,11,BALL_C11); //not on LED headers
+    //blink blinkC12 (clk_1,C,12,BALL_C12); //not on LED headers
+    //blink blinkC13 (clk_1,C,13,BALL_C13); //not on LED headers
+    blink blinkC14 (clk_1,C,14,BALL_C14); //J12 pin 1
+    blink blinkC15 (clk_1,C,15,BALL_C15); //J10 pin 6
+    blink blinkC16 (clk_1,C,16,BALL_C16); //J10 pin 5
+*/
+    blink blinkD1 (clk_1,D,1,BALL_D1); //J4 pin 1
+    blink blinkD3 (clk_1,D,3,BALL_D3); //J1 pin 6
+    blink blinkD4 (clk_1,D,4,BALL_D4); //J1 pin 4
+    //blink blinkD5 (clk_1,D,5,BALL_D5); //not on LED headers
+    //blink blinkD6 (clk_1,D,6,BALL_D6); //not on LED headers
+    //blink blinkD7 (clk_1,D,7,BALL_D7); //not on LED headers
+    //blink blinkD8 (clk_1,D,8,BALL_D8); //not on LED headers
+    //blink blinkD9 (clk_1,D,9,BALL_D9); //not on LED headers
+    //blink blinkD10 (clk_1,D,10,BALL_D10); //not on LED headers
+    //blink blinkD11 (clk_1,D,11,BALL_D11); //not on LED headers
+    //blink blinkD12 (clk_1,D,12,BALL_D12); //not on LED headers
+    //blink blinkD13 (clk_1,D,13,BALL_D13); //not on LED headers
+    //blink blinkD14 (clk_1,D,14,BALL_D14); //not on LED headers
+    //blink blinkD16 (clk_1,D,16,BALL_D16); //not on LED headers
+/*
     blink blinkT6 (clk_1,T,6,BALL_T6); //LED (low-active)
 
     blink blinkN5 (clk_1,N,5,BALL_N5); //global pin 10
@@ -122,9 +219,9 @@ module top (
     blink blinkP4 (clk_1,P,4,BALL_P4); //global pin 11
     blink blinkN4 (clk_1,N,4,BALL_N4); //global pin 7
     //blink blinkM3 (clk_1,M,3,BALL_M3); //not on LED headers
-    blink blinkN1 (clk_1,N,1,BALL_N1);  //global pin 13
-    assign BALL_M4 = 1'b0; //blink blinkM4 (clk_1,M,4,BALL_M4); //output enable, seems to be low-active
-
+    blink blinkN1 (clk_1,N,1,BALL_N1);  //global pin 13*/
+    assign BALL_M4 = 1'b0; //blink blinkM4 (clk_1,M,4,BALL_M4); //output enable, low-active
+/*
     blink blinkC4 (clk_1,C,4,BALL_C4); //J1 pin 2
     blink blinkD4 (clk_1,D,4,BALL_D4); //J1 pin 1
     //blink blinkE4 (clk_1,E,4,BALL_E4); //not on LED headers
@@ -137,7 +234,7 @@ module top (
     //blink blinkG3 (clk_1,G,3,BALL_G3); //not on LED headers
     blink blinkG4 (clk_1,G,4,BALL_G4); //J2 pin 6
     blink blinkH3 (clk_1,H,3,BALL_H3); //J2 pin 5
-    //blink blinkH4 (clk_1,H,4,BALL_H4);
+    //blink blinkH4 (clk_1,H,4,BALL_H4);*/
 
 
     /* Wiring */
