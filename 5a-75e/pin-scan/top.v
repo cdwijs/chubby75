@@ -365,22 +365,22 @@ module top (
     //blink blinkL15 (clk_1,L,15,BALL_L15); //not on LED headers
     //blink blinkL16 (clk_1,L,16,BALL_L16); //not on LED headers
 */
-    blink blinkM1 (clk_1,M,1,BALL_M1); 
-    blink blinkM2 (clk_1,M,2,BALL_M2); //not on LED headers
-    blink blinkM3 (clk_1,M,3,BALL_M3);
+    //blink blinkM1 (clk_1,M,1,BALL_M1); 
+    //blink blinkM2 (clk_1,M,2,BALL_M2); //not on LED headers
+    //blink blinkM3 (clk_1,M,3,BALL_M3);
     assign BALL_M4 = 1'b0; //blink blinkM4 (clk_1,M,4,BALL_M4); //output enable, low-active
-    blink blinkM5 (clk_1,M,5,BALL_M5); //not on LED headers
-    blink blinkM6 (clk_1,M,6,BALL_M6); //not on LED headers
-    blink blinkM7 (clk_1,M,7,BALL_M7); //not on LED headers
-    blink blinkM8 (clk_1,M,8,BALL_M8); //not on LED headers
-    blink blinkM9 (clk_1,M,9,BALL_M9); //not on LED headers
-    blink blinkM10 (clk_1,M,10,BALL_M10); //not on LED headers
-    blink blinkM11 (clk_1,M,11,BALL_M11); //not on LED headers
-    blink blinkM12 (clk_1,M,12,BALL_M12); //not on LED headers
-    blink blinkM13 (clk_1,M,13,BALL_M13); //not on LED headers
-    blink blinkM14 (clk_1,M,14,BALL_M14); //not on LED headers
-    blink blinkM15 (clk_1,M,15,BALL_M15); 
-    blink blinkM16 (clk_1,M,16,BALL_M16);
+    //blink blinkM5 (clk_1,M,5,BALL_M5); //not on LED headers
+    //blink blinkM6 (clk_1,M,6,BALL_M6); //not on LED headers
+    //blink blinkM7 (clk_1,M,7,BALL_M7); //not on LED headers
+    //blink blinkM8 (clk_1,M,8,BALL_M8); //not on LED headers
+    //blink blinkM9 (clk_1,M,9,BALL_M9); //not on LED headers
+    //blink blinkM10 (clk_1,M,10,BALL_M10); //not on LED headers
+    //blink blinkM11 (clk_1,M,11,BALL_M11); //not on LED headers
+    //blink blinkM12 (clk_1,M,12,BALL_M12); //not on LED headers
+    //blink blinkM13 (clk_1,M,13,BALL_M13); //not on LED headers
+    //blink blinkM14 (clk_1,M,14,BALL_M14); //not on LED headers
+    //blink blinkM15 (clk_1,M,15,BALL_M15); 
+    //blink blinkM16 (clk_1,M,16,BALL_M16);
 
     /* Wiring */
     assign LED=ledval;
