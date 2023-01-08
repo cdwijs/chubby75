@@ -1,74 +1,99 @@
-// 8N1 UART Module, transmit only
+/*
+ * uart_tx.v
+ *
+ * vim: ts=4 sw=4
+ *
+ * Copyright (C) 2019  Sylvain Munaut <tnt@246tNt.com>
+ * All rights reserved.
+ *
+ * BSD 3-clause, see LICENSE.bsd
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the <organization> nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
-module uart_tx_8n1 (
-    clk,        // input clock
-    txbyte,     // outgoing byte
-    senddata,   // trigger tx
-    txdone,     // outgoing byte sent
-    tx,         // tx wire
-    );
+`default_nettype none
 
-    /* Inputs */
-    input clk;
-    input[7:0] txbyte;
-    input senddata;
+module uart_tx #(
+	parameter integer DIV_WIDTH = 8
+)(
+	output wire tx,
+	input  wire [7:0] data,
+	input  wire valid,
+	output reg  ack,
+	output wire busy,
+	input  wire [DIV_WIDTH-1:0] div,	// div - 2
+	input  wire clk,
+	input  wire rst
+);
 
-    /* Outputs */
-    output txdone;
-    output tx;
+	// Signals
+	wire go, done, ce;
+	reg  active;
+	reg [9:0] shift;
+	reg [DIV_WIDTH:0] div_cnt;
+	reg [4:0] bit_cnt;
 
-    /* Parameters */
-    parameter STATE_IDLE=8'd0;
-    parameter STATE_STARTTX=8'd1;
-    parameter STATE_TXING=8'd2;
-    parameter STATE_TXDONE=8'd3;
+	// Control
+	assign go = valid & ~active;
+	assign done = ce & bit_cnt[4];
 
-    /* State variables */
-    reg[7:0] state=8'b0;
-    reg[7:0] buf_tx=8'b0;
-    reg[7:0] bits_sent=8'b0;
-    reg txbit=1'b1;
-    reg txdone=1'b0;
+	always @(posedge clk or posedge rst)
+		if (rst)
+			active <= 1'b0;
+		else
+			active <= (active & ~done) | go;
 
-    /* Wiring */
-    assign tx=txbit;
+	// Baud rate generator
+	always @(posedge clk)
+		if (~active | div_cnt[DIV_WIDTH])
+			div_cnt <= { 1'b0, div };
+		else
+			div_cnt <= div_cnt - 1;
 
-    /* always */
-    always @ (posedge clk) begin
-        // start sending?
-        if (senddata == 1 && state == STATE_IDLE) begin
-            state <= STATE_STARTTX;
-            buf_tx <= txbyte;
-            txdone <= 1'b0;
-        end else if (state == STATE_IDLE) begin
-            // idle at high
-            txbit <= 1'b1;
-            txdone <= 1'b0;
-        end
+	assign ce = div_cnt[DIV_WIDTH];
 
-        // send start bit (low)
-        if (state == STATE_STARTTX) begin
-            txbit <= 1'b0;
-            state <= STATE_TXING;
-        end
-        // clock data out
-        if (state == STATE_TXING && bits_sent < 8'd8) begin
-            txbit <= buf_tx[0];
-            buf_tx <= buf_tx>>1;
-            bits_sent = bits_sent + 1;
-        end else if (state == STATE_TXING) begin
-            // send stop bit (high)
-            txbit <= 1'b1;
-            bits_sent <= 8'b0;
-            state <= STATE_TXDONE;
-        end
+	// Bit counter
+	always @(posedge clk)
+		if (~active)
+			bit_cnt <= 5'h08;
+		else if (ce)
+			bit_cnt <= bit_cnt - 1;
 
-        // tx done
-        if (state == STATE_TXDONE) begin
-            txdone <= 1'b1;
-            state <= STATE_IDLE;
-        end
+	// Shift register
+	always @(posedge clk or posedge rst)
+		if (rst)
+			shift <= 10'h3ff;
+		else if (go)
+			shift <= { 1'b1, data, 1'b0 };
+		else if (ce)
+			shift <= { 1'b1, shift[9:1] };
 
-    end
+	// Outputs
+	always @(posedge clk)
+		ack <= go;
+	
+	assign busy = active;
 
-endmodule
+	assign tx = shift[0];
+
+endmodule // uart_tx

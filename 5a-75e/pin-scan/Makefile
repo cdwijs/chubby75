@@ -1,25 +1,29 @@
-TARGET=uart_tx
-TOP=top.v
+all: top.svf
 
-OBJS+=top.v
+SYNTH_SRCS=top.v uart_tx.v
+SIM_SRCS=top_tb.v top.v uart_tx.v OSCG.v
 
-all: ${TARGET}.bit
+ifndef PACKAGE
+	PACKAGE=CABGA256
+endif
 
-$(TARGET).json: $(OBJS)
-	yosys -p "synth_ecp5 -json $@" $(OBJS)
+top.json: $(SYNTH_SRCS) name.hex
+	yosys -p 'read_verilog $(SYNTH_SRCS); synth_ecp5 -top top -abc9 -json $@'
 
-$(TARGET)_out.config: $(TARGET).json
-	nextpnr-ecp5 --25k --package CABGA256 --speed 6 --json $< --textcfg $@ --lpf top.lpf --freq 65
+top.config: top.json top.lpf
+	nextpnr-ecp5 --25k --package $(PACKAGE) --speed 6 --lpf top.lpf --json top.json --textcfg top.config --freq 65
 
-$(TARGET).bit: $(TARGET)_out.config
-	ecppack --svf ${TARGET}.svf $< $@
+top.svf: top.config
+	ecppack --input $< --svf $@
 
-${TARGET}.svf : ${TARGET}.bit
+name.hex top.lpf: ECP5U25Pinout.csv
+	./gen_lpf.py ECP5U25Pinout.csv top.lpf name.hex --package $(PACKAGE)
 
-prog: ${TARGET}.svf
-	openFPGALoader -c digilent_hs2 $(TARGET).bit
+top_tb: $(SIM_SRCS)
+	iverilog -I `yosys-config --datdir/ecp5/` `yosys-config --datdir/ecp5/cells_sim.v` $(SIM_SRCS) -o $@
+
+top_tb.vcd: top_tb name.hex
+	./top_tb
 
 clean:
-	rm -f *.svf *.bit *.config *.ys *.json
-
-.PHONY: prog clean
+	rm -f *.json *.config *.svf *.vcd top_tb name.hex top.lpf

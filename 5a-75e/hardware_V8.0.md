@@ -1,509 +1,404 @@
-Colorlight 5A-75E V8.0 Hardware
-===============================
+# Colorlight 5A-75E V8.0 Hardware
 
-* CAUTION: the below info has been copied from the 7.1 hardware, and may not be correct.
+Warning: This information has been copied from hardware V6.0 and is not yet guaranteed to be correct. 
+The signals on the LED headers are checked with pin-scan
 
 * [Front image](images/cl-5a-75e-v80-front.jpg)
 * [Back image](images/cl-5a-75e-v80-back.jpg)
 
-Components
-----------
+## Components
 
-* Lattice ECP5 `LFE5U-25F-6BG256C` ([product page](https://www.latticesemi.com/Products/FPGAandCPLD/ECP5))
+* Lattice ECP5 `LFE5UM-25-...` ([product page](https://www.latticesemi.com/Products/FPGAandCPLD/ECP5))
 * Winbond `25Q32JVSIQ`, 32 Mbits SPI flash ([datasheet](../5a-75b/datasheets/w25q32jv_spi_revc_08302016.pdf))
-* 2x Broadcom `B50612D` Gigabit Ethernet PHYs ([datasheet](../5a-75b/datasheets/B50610-DS07-RDS.pdf))
-* 2x ESMT `M12L16161A-5T` 1M x 16bit 200MHz SDRAMs (organized as 1M x 32bit) ([datasheet](../5a-75b/datasheets/M12L16161A.pdf))
+* 2x Realtek `RTL8211FD` Gigabit Ethernet PHYs
+* 1x ESMT `M12L64322A-5T` 2M x 32bit 200MHz SDRAMs
 * 23x `74HC245T` Octal Bidirectional Transceivers (used for level translation to 5V)
-* U10, U11, U13, U17 are connected to A, B, C, D, E, CLK, STB, OE for J1 to J8 
-* U19, U20, U21, U22 are connected to A, B, C, D, E, CLK, STB, OE for J1 to J8
-* U23, U28, U24, U27, U26, U25 are connected to R0, G0, B0, R1, G1, B1 for J1 to J8 as noted below in tables
-* U23, U28, U24, U27, U26, U25 can be replaced if required with 74LVC245 for inputs, Vcc & DIR will need to be isolated from solder pads
-* and jumpers used for connections
-* U09, U12, U14, U15, U16, U18 are connected to R0, G0, B0, R1, G1, B1 for J1 to J8 as noted below in tables
-* U09, U12, U14, U15, U16, U18 can be replaced if required with 74LVC245 for inputs, Vcc & DIR will need to be isolated from solder pads
-* and jumpers used for connections
 
-Connections
-===========
+## Connections
 
-JTAG
-----
+### JTAG
 
-JTAG is available on two 2-pin headers next to the FPGA (U33). VCC/GND are available on a 2-pin header nearby.
+JTAG is available on a 2x2-pin header near the SPI flash. VCC and GND are
+available on a 2-pin header near the Ethernet magnetics.
 
-| Pin | Function |
-|-----|----------|
-| J27 | TCK      |
-| J31 | TMS      |
-| J32 | TDI      |
-| J30 | TDO      |
-|     |          |
-| J33 | *3.3V*   |
-| J34 | *GND*    |
+| Connector | Function |
+|-----------|----------|
+| J27       | TCK      |
+| J31       | TMS      |
+| J32       | TDI      |
+| J30       | TDO      |
+|           |          |
+| J33       | 3.3V     |
+| J34       | GND      |
 
-Clock
------
+### Clock (Y1)
 
-A 25MHz clock is available at FPGA pin P6, and is also connected to both PHYs.
+A 25MHz clock is available on FPGA pin P6. It is provided by the PHYs so it stops when they are in reset state.
 
-LED, Button
------------
+| FPGA Pin | Function |
+|----------|----------|
+| P6       | 25MHz clock
 
-There is a general purpose, FPGA controlled LED (DATA_LED-) at P11, active low (FPGA pin should be set to open drain).
+### LED and Button
 
-Additionally, there is a button (J28, KEY+) at M13. When M13 is an input, pressing the button will read low, otherwise it will read high.
+There is a general purpose, FPGA controlled LED (DATA_LED-) at FPGA pin T6,
+which is active low. There is a button (J28, KEY+) on FPGA pin R7 which reads
+low when the button is pressed and high otherwise.
 
-SPI Flash (U31)
----------------
+| FPGA Pin | Function |
+|----------|----------|
+| T6       | LED active low
+| R7       | Button active low
 
-| Flash Pin | FPGA Pin | Function | Notes |
-|-----------|----------|----------| ----- |
-| 1         |  N8      | CS#      |
-| 2         |  T7      | SO       |
-| 3         |  -       | WP#      | Wired to 3v3
-| 4         |  -       | GND      |
-| 5         |  T8      | SI       |
-| 6         |  N9      | SCK      |
-| 7         |  -       | HOLD#    | Wired to 3v3
-| 8         |  -       | VCC      | Wired to 3v3
+### SPI Flash (U31)
 
-SDRAM (U29 & U32)
------------------
+The SPI flash is wired to a 3v3 supply. The WP# and HOLD# signals
+are connected directly to 3v3. Note that N9 is not a user IO pin
+on the ECP5 but is part of the sysCONFIG block, so user code must
+the USRMCLK instance to control this pin.
 
-* This information is incorrect, v8.0 only has one memory chip
-The two SDRAMs are configured as 1M x32 with the address and control signals shared and the data signals independently routed to the FPGA.
+| FPGA Pin | Flash Pin | Function |
+|----------|-----------|----------|
+| N8       | 1         | CS#
+| T7       | 2         | SO
+| T8       | 5         | SI
+| N9       | 6         | CLK
 
-| SDRAM Signal | FPGA Pin for U29 | FPGA Pin for U32 | Notes |
-|--------------|------------------|------------------|-------|
-| DQ0          | B13              | E2               |
-| DQ1          | A11              | E4               |
-| DQ2          | B9               | D3               |
-| DQ3          | C11              | E5               |
-| DQ4          | C9               | A4               |
-| DQ5          | C10              | D4               |
-| DQ6          | E8               | C4               |
-| DQ7          | B5               | D5               |
-| DQ8          | B6               | D6               |
-| DQ9          | A6               | E6               |
-| DQ10         | A5               | D8               |
-| DQ11         | B4               | A8               |
-| DQ12         | C3               | B8               |
-| DQ13         | B3               | B10              |
-| DQ14         | B2               | B11              |
-| DQ15         | A2               | E11              |
-| A0           | A9               | A9               |
-| A1           | E10              | E10              |
-| A2           | B12              | B12              |
-| A3           | D13              | D13              |
-| A4           | C12              | C12              |
-| A5           | D11              | D11              |
-| A6           | D10              | D10              |
-| A7           | E9               | E9               |
-| A8           | D9               | D9               |
-| A9           | B7               | B7               |
-| A10/AP       | C8               | C8               |
-| BA           | A7               | A7               |
-| LDQM         | -                | -                | Wired to GND
-| UDQM         | -                | -                | Wired to GND
-| CLK          | C6               | C6               |
-| CKE          | -                | -                | Wired to 3v3
-| CS#          | -                | -                | Wired to GND
-| RAS#         | D7               | D7               |
-| CAS#         | E7               | E7               |
-| WE#          | C7               | C7               |
+### SDRAM (U29)
 
-PHY0, U3
-----------
+The SDRAM operates on the 3v3 supply. Its CS and DQM0/1/2/3 pins are hardwired
+to GND, and the CKE pin is hardwired to 3v3.
 
-| U3 Pin  | FPGA Pin | Notes |
-|---------|----------|-------|
-| GTXCLK  | M2       |
-| TXD[0]  | L1       |
-| TXD[1]  | L3       |
-| TXD[2]  | P2       |
-| TXD[3]  | L4       |
-| TX\_EN  | M3       |
-| RXC     | M1       | Connected to ~RESET via R100
-| RXD[0]  | N1       |
-| RXD[1]  | M5       |
-| RXD[2]  | N5       |
-| RXD[3]  | M6       |
-| RXD\_DV | N6       |
-| MDC     | P3       |
-| MDIO    | T2       |
-| ~RESET  | P5       | Drives RXC via R100
-
-PHY1, U7
-----------
-
-| U7 Pin  | FPGA Pin | Notes |
-|---------|----------|-------|
-| GTXCLK  | M12      |
-| TXD[0]  | T14      |
-| TXD[1]  | R12      |
-| TXD[2]  | R13      |
-| TXD[3]  | R14      |
-| TX\_EN  | R15      |
-| RXC     | M16      | Connected to ~RESET via R107
-| RXD[0]  | P13      |
-| RXD[1]  | N13      |
-| RXD[2]  | P14      |
-| RXD[3]  | M15      |
-| RXD\_DV | L15      |
-| MDC     | P3       |
-| MDIO    | T2       |
-| ~RESET  | P5       | Drives RXC via R107
+| FPGA Pin  | RAM Pin   | Function |
+|-----------|-----------|----------|
+| D5        | 2         | DQ0
+| C5        | 4         | DQ1
+| E5        | 5         | DQ2
+| C6        | 7         | DQ3
+| D6        | 8         | DQ4
+| E6        | 10        | DQ5
+| D7        | 11        | DQ6
+| E7        | 13        | DQ7
+| D10       | 74        | DQ8
+| C11       | 76        | DQ9
+| D11       | 77        | DQ10
+| C12       | 79        | DQ11
+| E10       | 80        | DQ12
+| C13       | 82        | DQ13
+| D13       | 83        | DQ14
+| E11       | 85        | DQ15
+| A5        | 31        | DQ16
+| B4        | 33        | DQ17
+| A4        | 34        | DQ18
+| B3        | 36        | DQ19
+| A3        | 37        | DQ20
+| C3        | 39        | DQ21
+| A2        | 40        | DQ22
+| B2        | 42        | DQ23
+| D14       | 45        | DQ24
+| B14       | 47        | DQ25
+| A14       | 48        | DQ26
+| B13       | 50        | DQ27
+| A13       | 51        | DQ28
+| B12       | 53        | DQ29
+| B11       | 54        | DQ30
+| A11       | 56        | DQ31
+| A9        | 25        | A0
+| B9        | 26        | A1
+| B10       | 27        | A2
+| C10       | 60        | A3
+| D9        | 61        | A4
+| C9        | 62        | A5
+| E9        | 63        | A6
+| D8        | 64        | A7
+| E8        | 65        | A8
+| C7        | 66        | A9
+| B8        | 24        | A10/AP
+| B7        | 22        | BA0
+| A8        | 23        | BA1
+| B5        | 17        | WE#
+| A6        | 18        | CAS#
+| B6        | 19        | RAS#
+| C8        | 68        | CLK
 
 
-Connector J1
---------------
-| J1 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        |  F3      | U28 Pin 18
-| 2     | G0        |  F1      | U28 Pin 17
-| 3     | B0        |  G3      | U28 Pin 16
-| 4     | *GND*     |  -       |
-| 5     | R1        |  G2      | U28 Pin 15  |
-| 6     | G1        |  H3      | U28 Pin 14  |
-| 7     | B1        |  H5      | U28 Pin 13  |
-| 8     | E         |  F15     | U13 or U17
-| 9     | A         |  L2      | U11 or U10
-| 10    | B         |  K1      | U11 or U10
-| 11    | C         |  J5      | U11 or U10
-| 12    | D         |  K2      | U11 or U10
-| 13    | CLK       |  B16     | U13 or U17
-| 14    | STB       |  J14     | U13 or U17
-| 15    | OE        |  F12     | U13 or U17
-| 16    | *GND*     |  -       |
+### PHY0, U32
 
+The PHY IO is connected to the 3v3 supply. The MDC, MDIO, and PHYRST# lines
+are common between both PHYs.
 
-Connector J2
---------------
-| J2 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        |  G4      | U28 Pin 12
-| 2     | G0        |  G5      | U28 Pin 11
-| 3     | B0        |  J2      | U24 Pin 18
-| 4     | *GND*     |  -       |
-| 5     | R1        |  H2      | U24 Pin 17
-| 6     | G1        |  J1      | U24 Pin 16
-| 7     | B1        |  J3      | U24 Pin 15
-| 8     | E         |  F15     | U13 or U17
-| 9     | A         |  L2      | U11 or U10
-| 10    | B         |  K1      | U11 or U10
-| 11    | C         |  J5      | U11 or U10
-| 12    | D         |  K2      | U11 or U10
-| 13    | CLK       |  B16     | U13 or U17
-| 14    | STB       |  J14     | U13 or U17
-| 15    | OE        |  F12     | U13 or U17
-| 16    | *GND*     |  -       |
+| FPGA Pin  | PHY Pin   | Function |
+|-----------|-----------|----------|
+| L1        | 20        | TXC
+| M2        | 18        | TXD0
+| M1        | 17        | TXD1
+| P1        | 16        | TXD2
+| R1        | 15        | TXD3
+| L2        | 19        | TXCTL
+| J1        | 27        | RXC
+| K2        | 25        | RXD0
+| J3        | 24        | RXD1
+| K1        | 23        | RXD2
+| K3        | 22        | RXD3
+| J2        | 26        | RXCTL
+| R5        | 13        | MDC
+| T4        | 14        | MDIO
+| R6        | 12        | PHYRST#
 
+### PHY1, U40
 
+The PHY IO is connected to the 3v3 supply. The MDC, MDIO, and PHYRST# lines
+are common between both PHYs.
 
-Connector J3
---------------
-| J3 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        |  J4      | U24 Pin 14
-| 2     | G0        |  K3      | U24 Pin 13
-| 3     | B0        |  G1      | U24 Pin 12
-| 4     | *GND*     |  -       |
-| 5     | R1        |  K4      | U24 Pin 11
-| 6     | G1        |  C2      | U23 Pin 18
-| 7     | B1        |  E3      | U23 Pin 17
-| 8     | E         |  F15     | U13 or U17
-| 9     | A         |  L2      | U11 or U10
-| 10    | B         |  K1      | U11 or U10
-| 11    | C         |  J5      | U11 or U10
-| 12    | D         |  K2      | U11 or U10
-| 13    | CLK       |  B16     | U13 or U17
-| 14    | STB       |  J14     | U13 or U17
-| 15    | OE        |  F12     | U13 or U17
-| 16    | *GND*     |  -       |
+| FPGA Pin  | PHY Pin   | Function |
+|-----------|-----------|----------|
+| J16       | 20        | TXC
+| K16       | 18        | TXD0
+| J15       | 17        | TXD1
+| J14       | 16        | TXD2
+| K15       | 15        | TXD3
+| K14       | 19        | TXCTL
+| M16       | 27        | RXC
+| M15       | 25        | RXD0
+| R16       | 24        | RXD1
+| L15       | 23        | RXD2
+| L16       | 22        | RXD3
+| P16       | 26        | RXCTL
+| R5        | 13        | MDC
+| T4        | 14        | MDIO
+| R6        | 12        | PHYRST#
 
+### LED Connectors
 
-Connector J4
---------------
-| J4 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        |  C1      | U23 Pin 16 
-| 2     | G0        |  A3      | U23 Pin 15
-| 3     | B0        |  F4      | U23 Pin 14
-| 4     | *GND*     |  -       |
-| 5     | R1        |  E1      | U23 Pin 13
-| 6     | G1        |  F5      | U23 Pin 12
-| 7     | B1        |  D1      | U23 Pin 11
-| 8     | E         |  F15     | U13 or U17
-| 9     | A         |  L2      | U11 or U10
-| 10    | B         |  K1      | U11 or U10
-| 11    | C         |  J5      | U11 or U10
-| 12    | D         |  K2      | U11 or U10
-| 13    | CLK       |  B16     | U13 or U17
-| 14    | STB       |  J14     | U13 or U17
-| 15    | OE        |  F12     | U13 or U17
-| 16    | *GND*     |  -       |
+The LED connectors use the HUB75 pinout with five address bits (A, B, C, D, E):
 
+| HUB75 Pin     | Function |
+|---------------|----------|
+| 1             | R0
+| 2             | G0
+| 3             | B0
+| 4             | GND
+| 5             | R1
+| 6             | G1
+| 7             | B1
+| 8             | E (Shared)
+| 9             | A (Shared)
+| 10            | B (Shared)
+| 11            | C (Shared)
+| 12            | D (Shared)
+| 13            | CLK (Shared)
+| 14            | STB/LAT (Shared)
+| 15            | OE (Shared)
+| 16            | GND
 
-Connector J5
---------------
-| J5 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        | H4       | U27 Pin 18
-| 2     | G0        | K5       | U27 Pin 17
-| 3     | B0        | P1       | U27 Pin 16
-| 4     | *GND*     | -        |
-| 5     | R1        | R1       | U27 Pin 15
-| 6     | G1        | L5       | U27 Pin 14
-| 7     | B1        | F2       | U27 Pin 13
-| 8     | E         |  F15     | U13 or U17
-| 9     | A         |  L2      | U11 or U10
-| 10    | B         |  K1      | U11 or U10
-| 11    | C         |  J5      | U11 or U10
-| 12    | D         |  K2      | U11 or U10
-| 13    | CLK       |  B16     | U13 or U17
-| 14    | STB       |  J14     | U13 or U17
-| 15    | OE        |  F12     | U13 or U17
-| 16    | *GND*     |  -       |
+For each connector, the address, CLK, STB/LAT, and OE bits are shared:
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| N5        | 9         | A
+| N3        | 10        | B
+| P3        | 11        | C
+| P4        | 12        | D
+| N4        | 8         | E
+| M3        | 13        | CLK
+| N1        | 14        | STB
+| M4        | 15        | OE
 
-Connector J6
---------------
-| J6 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        | N3       | U27 Pin 12
-| 2     | G0        | M4       | U27 Pin 11
-| 3     | B0        | T4       | U26 Pin 18 
-| 4     | *GND*     | -        |
-| 5     | R1        | R5       | U26 Pin 17
-| 6     | G1        | R3       | U26 Pin 16
-| 7     | B1        | N4       | U26 Pin 15
-| 8     | E         |  F15     | U13 or U17
-| 9     | A         |  L2      | U11 or U10
-| 10    | B         |  K1      | U11 or U10
-| 11    | C         |  J5      | U11 or U10
-| 12    | D         |  K2      | U11 or U10
-| 13    | CLK       |  B16     | U13 or U17
-| 14    | STB       |  J14     | U13 or U17
-| 15    | OE        |  F12     | U13 or U17
-| 16    | *GND*     |  -       |
+The RBG bits are unique per connector:
 
+#### LED J1
 
-Connector J7
---------------
-| J7 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        | P4       | U26 Pin 14
-| 2     | G0        | R2       | U26 Pin 13
-| 3     | B0        | M8       | U26 Pin 12
-| 4     | *GND*     | -        |
-| 5     | R1        | M9       | U26 Pin 11
-| 6     | G1        | T6       | U25 Pin 18
-| 7     | B1        | R6       | U25 Pin 17
-| 8     | E         |  F15     | U13 or U17
-| 9     | A         |  L2      | U11 or U10
-| 10    | B         |  K1      | U11 or U10
-| 11    | C         |  J5      | U11 or U10
-| 12    | D         |  K2      | U11 or U10
-| 13    | CLK       |  B16     | U13 or U17
-| 14    | STB       |  J14     | U13 or U17
-| 15    | OE        |  F12     | U13 or U17
-| 16    | *GND*     |  -       |
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| C4        | 1         | R0
+| D4        | 2         | G0
+| E4        | 3         | B0
+| D3        | 5         | R1
+| E3        | 6         | G1
+| F4        | 7         | B1
 
+#### LED J2
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| F3        | 1         | R0
+| F5        | 2         | G0
+| G3        | 3         | B0
+| G4        | 5         | R1
+| H3        | 6         | G1
+| H4        | 7         | B1
 
-Connector J8
---------------
-| J8 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        | R8       | U25 Pin 16
-| 2     | G0        | R7       | U25 Pin 15
-| 3     | B0        | P8       | U25 Pin 14
-| 4     | *GND*     | -        |
-| 5     | R1        | P7       | U25 Pin 13
-| 6     | G1        | N7       | U25 Pin 12
-| 7     | B1        | M7       | U25 Pin 11
-| 8     | E         |  F15     | U13 or U17
-| 9     | A         |  L2      | U11 or U10
-| 10    | B         |  K1      | U11 or U10
-| 11    | C         |  J5      | U11 or U10
-| 12    | D         |  K2      | U11 or U10
-| 13    | CLK       |  B16     | U13 or U17
-| 14    | STB       |  J14     | U13 or U17
-| 15    | OE        |  F12     | U13 or U17
-| 16    | *GND*     |  -       |
+#### LED J3
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| G5        | 1         | R0
+| H5        | 2         | G0
+| J5        | 3         | B0
+| J4        | 5         | R1
+| B1        | 6         | G1
+| C2        | 7         | B1
 
-Connector J9
---------------
-| J9 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        | M11      | U18 Pin 17
-| 2     | G0        | N11      | U18 Pin 18
-| 3     | B0        | P12      | U18 Pin 16
-| 4     | *GND*     | -        |
-| 5     | R1        | K15      | U18 Pin 14
-| 6     | G1        | N12      | U18 Pin 15
-| 7     | B1        | L16      | U18 Pin 13
-| 8     | E         | F15      | U19 or U20
-| 9     | A         | L2       | U21 or U22
-| 10    | B         | K1       | U21 OR U22
-| 11    | C         | J5       | U21 or U22
-| 12    | D         | K2       | U21 or U22
-| 13    | CLK       | B16      | U19 0R U20
-| 14    | STB       | J14      | U19 or U20
-| 15    | OE        | F12      | U19 or U20
-| 16    | *GND*     | -        |
+#### LED J4
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| C1        | 1         | R0
+| D1        | 2         | G0
+| E2        | 3         | B0
+| E1        | 5         | R1
+| F2        | 6         | G1
+| F1        | 7         | B1
 
-Connector J10
---------------
-|J10 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        | T13      | U18 Pin 11
-| 2     | G0        | N14      | U18 Pin 12
-| 3     | B0        | M14      | U16 Pin 18
-| 4     | *GND*     | -        |
-| 5     | R1        | P16      | U16 Pin 16
-| 6     | G1        | T15      | U16 Pin 17
-| 7     | B1        | L14      | U16 Pin 15
-| 8     | E         | F15      | U19 or U20
-| 9     | A         | L2       | U21 or U22
-| 10    | B         | K1       | U21 OR U22
-| 11    | C         | J5       | U21 or U22
-| 12    | D         | K2       | U21 or U22
-| 13    | CLK       | B16      | U19 0R U20
-| 14    | STB       | J14      | U19 or U20
-| 15    | OE        | F12      | U19 or U20
-| 16    | *GND*     | -        |
+#### LED J5
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| G2        | 1         | R0
+| G1        | 2         | G0
+| H2        | 3         | B0
+| K5        | 5         | R1
+| K4        | 6         | G1
+| L3        | 7         | B1
 
-Connector J11
---------------
-|J11 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        | K16      | U16 Pin 13
-| 2     | G0        | J15      | U16 Pin 14
-| 3     | B0        | J16      | U16 Pin 12
-| 4     | *GND*     | -        |
-| 5     | R1        | J12      | U14 Pin 18
-| 6     | G1        | H15      | U16 Pin 11
-| 7     | B1        | G16      |
-| 8     | E         | F15      | U19 or U20
-| 9     | A         | L2       | U21 or U22
-| 10    | B         | K1       | U21 OR U22
-| 11    | C         | J5       | U21 or U22
-| 12    | D         | K2       | U21 or U22
-| 13    | CLK       | B16      | U19 0R U20
-| 14    | STB       | J14      | U19 or U20
-| 15    | OE        | F12      | U19 or U20
-| 16    | *GND*     | -        |
+#### LED J6
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| L4        | 1         | R0
+| L5        | 2         | G0
+| P2        | 3         | B0
+| R2        | 5         | R1
+| T2        | 6         | G1
+| R3        | 7         | B1
 
-Connector J12
---------------
-|J12 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        | P15      | U14 Pin 15
-| 2     | G0        | L12      | U14 Pin 16
-| 3     | B0        | L13      | U14 Pin 14
-| 4     | *GND*     | -        |
-| 5     | R1        | D14      | U14 Pin 12
-| 6     | G1        | R16      | U14 Pin 13
-| 7     | B1        | E16      | U14 Pin 11
-| 8     | E         | F15      | U19 or U20
-| 9     | A         | L2       | U21 or U22
-| 10    | B         | K1       | U21 OR U22
-| 11    | C         | J5       | U21 or U22
-| 12    | D         | K2       | U21 or U22
-| 13    | CLK       | B16      | U19 0R U20
-| 14    | STB       | J14      | U19 or U20
-| 15    | OE        | F12      | U19 or U20
-| 16    | *GND*     | -        |
+#### LED J7
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| T3        | 1         | R0
+| R4        | 2         | G0
+| M5        | 3         | B0
+| P5        | 5         | R1
+| N6        | 6         | G1
+| N7        | 7         | B1
 
-Connector J13
---------------
-|J13 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        |  H13     | U09 Pin 17
-| 2     | G0        |  J13     | U09 Pin 18
-| 3     | B0        |  H12     | U09 Pon 16
-| 4     | *GND*     |  -       |
-| 5     | R1        |  G14     | U09 Pin 14
-| 6     | G1        |  H14     | U09 Pin 15
-| 7     | B1        |  G15     | U09 Pin 13
-| 8     | E         |  F15     | U19 or U20
-| 9     | A         |  L2      | U21 or U22
-| 10    | B         |  K1      | U21 OR U22
-| 11    | C         |  J5      | U21 or U22
-| 12    | D         |  K2      | U21 or U22
-| 13    | CLK       |  B16     | U19 0R U20
-| 14    | STB       |  J14     | U19 or U20
-| 15    | OE        |  F12     | U19 or U20
-| 16    | *GND*     |  -       |
+#### LED J8
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| P7        | 1         | R0
+| M7        | 2         | G0
+| P8        | 3         | B0
+| R8        | 5         | R1
+| M8        | 6         | G1
+| M9        | 7         | B1
 
-Connector J14
---------------
-|J14 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        |  E14     | U09 Pin 11
-| 2     | G0        |  D16     | U09 Pin 12
-| 3     | B0        |  C15     | U12 Pin 18
-| 4     | *GND*     |  -       |
-| 5     | R1        |  B15     | U12 Pin 16
-| 6     | G1        |  C16     | U12 Pin 17
-| 7     | B1        |  C14     | U12 Pin 15
-| 8     | E         |  F15     | U19 or U20
-| 9     | A         |  L2      | U21 or U22
-| 10    | B         |  K1      | U21 OR U22
-| 11    | C         |  J5      | U21 or U22
-| 12    | D         |  K2      | U21 or U22
-| 13    | CLK       |  B16     | U19 0R U20
-| 14    | STB       |  J14     | U19 or U20
-| 15    | OE        |  F12     | U19 or U20
-| 16    | *GND*     |  -       |
+#### LED J9
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| P11       | 1         | R0
+| N11       | 2         | G0
+| M11       | 3         | B0
+| T13       | 5         | R1
+| R12       | 6         | G1
+| R13       | 7         | B1
 
-Connector J15
---------------
-|J15 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        |  A15     | U12 Pin 13
-| 2     | G0        |  F16     | U12 Pin 14
-| 3     | B0        |  A14     | U12 Pin 12
-| 4     | *GND*     |  -       |
-| 5     | R1        |  E13     | U15 Pin 18
-| 6     | G1        |  B14     | U12 Pin 11
-| 7     | B1        |  A13     | U15 Pin 17
-| 8     | E         |  F15     | U19 or U20
-| 9     | A         |  L2      | U21 or U22
-| 10    | B         |  K1      | U21 OR U22
-| 11    | C         |  J5      | U21 or U22
-| 12    | D         |  K2      | U21 or U22
-| 13    | CLK       |  B16     | U19 0R U20
-| 14    | STB       |  J14     | U19 or U20
-| 15    | OE        |  F12     | U19 or U20
-| 16    | *GND*     |  -       |
+#### LED J10
 
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| R14       | 1         | R0
+| T14       | 2         | G0
+| D16       | 3         | B0
+| C15       | 5         | R1
+| C16       | 6         | G1
+| B16       | 7         | B1
 
-Connector J16
---------------
-|J16 Pin| HUB75 pin | FPGA Pin | Buffer & Pin|
-|-------|-----------|----------|-------------|
-| 1     | R0        |  G13     | U15 Pin 15
-| 2     | G0        |  G12     | U15 Pin 16
-| 3     | B0        |  E15     | U15 Pin 14
-| 4     | *GND*     |  -       |
-| 5     | R1        |  F14     | U15 Pin 12
-| 6     | G1        |  F13     | U15 Pin 13
-| 7     | B1        |  C13     | U15 Pin 11
-| 8     | E         |  F15     | U19 or U20
-| 9     | A         |  L2      | U21 or U22
-| 10    | B         |  K1      | U21 OR U22
-| 11    | C         |  J5      | U21 or U22
-| 12    | D         |  K2      | U21 or U22
-| 13    | CLK       |  B16     | U19 0R U20
-| 14    | STB       |  J14     | U19 or U20
-| 15    | OE        |  F12     | U19 or U20
-| 16    | *GND*     |  -       |
+#### LED J11
+
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| B15       | 1         | R0
+| C14       | 2         | G0
+| T15       | 3         | B0
+| P15       | 5         | R1
+| R15       | 6         | G1
+| P12       | 7         | B1
+
+#### LED J12
+
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| P13       | 1         | R0
+| N12       | 2         | G0
+| N13       | 3         | B0
+| M12       | 5         | R1
+| P14       | 6         | G1
+| N14       | 7         | B1
+
+#### LED J13
+
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| H15       | 1         | R0
+| H14       | 2         | G0
+| G16       | 3         | B0
+| F16       | 5         | R1
+| G15       | 6         | G1
+| F15       | 7         | B1
+
+#### LED J14
+
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| E15       | 1         | R0
+| E16       | 2         | G0
+| L12       | 3         | B0
+| L13       | 5         | R1
+| M14       | 6         | G1
+| L14       | 7         | B1
+
+#### LED J15
+
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| J13       | 1         | R0
+| K13       | 2         | G0
+| J12       | 3         | B0
+| H13       | 5         | R1
+| H12       | 6         | G1
+| G12       | 7         | B1
+
+#### LED J16
+
+| FPGA Pin  | HUB75 Pin | Function |
+|-----------|-----------|----------|
+| G14       | 1         | R0
+| G13       | 2         | G0
+| F12       | 3         | B0
+| F13       | 5         | R1
+| F14       | 6         | G1
+| E14       | 7         | B1
+
+### Unknown and Unused Pins
+
+The following pins are either defined in the stock configuration but their
+function is not known, or are entirely unused by the stock configuration image.
+
+All other user IO pins are documented above.
+
+| FPGA Pin  | Function  |
+|-----------|-----------|
+| A7        | Unknown output
+| A10       | Unknown input
+| A12       | Unknown input
+| A15       | Unknown output
+| D12       | Unknown bidirectional
+| E12       | Unknown output
+| E13       | Unknown output
+| K12       | Unknown output
+| M6        | Unknown output
+| M13       | Unknown output
+| N16       | Unused
